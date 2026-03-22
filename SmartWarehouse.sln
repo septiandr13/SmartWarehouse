@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36915.13 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWarehouse", "SmartWarehouse\SmartWarehouse.csproj", "{5AA6E6F7-CA4F-4C7B-AB33-EFFEDE36CC81}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AA6E6F7-CA4F-4C7B-AB33-EFFEDE36CC81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AA6E6F7-CA4F-4C7B-AB33-EFFEDE36CC81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AA6E6F7-CA4F-4C7B-AB33-EFFEDE36CC81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AA6E6F7-CA4F-4C7B-AB33-EFFEDE36CC81}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {977D31AF-B8B5-4AC1-B64A-106A3A4E2AC1}
+	EndGlobalSection
+EndGlobal

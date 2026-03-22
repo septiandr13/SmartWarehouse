@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "Warehouse Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="display-5 font-weight-bold">Smart Warehouse Overview</h2>
+            <p class="text-muted">Selamat datang kembali! Berikut status gudang Anda saat ini.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Total SKU</h6>
+                            <h2 class="mb-0">@ViewBag.TotalProducts</h2>
+                        </div>
+                        <i class="bi bi-box-seam fs-1"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between small">
+                    <a class="text-white stretched-link" asp-controller="Product" asp-action="Index">Lihat Detail</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Total Item Fisik</h6>
+                            <h2 class="mb-0">@ViewBag.TotalStock</h2>
+                        </div>
+                        <i class="bi bi-stack fs-1"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between small">
+                    <span class="text-white">Kapasitas Terpakai</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card @(ViewBag.LowStockCount > 0 ? "bg-danger" : "bg-secondary") text-white shadow mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Stok Kritis (< 10)</h6>
+                            <h2 class="mb-0">@ViewBag.LowStockCount</h2>
+                        </div>
+                        <i class="bi bi-exclamation-triangle fs-1"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between small">
+                    <span class="text-white">Perlu Restock Segera</span>
+                </div>
+            </div>
+        </div>
+        <div class="card shadow mt-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-bar-chart-line"></i> Top 5 Stok Barang Terbanyak</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="inventoryChart" style="width: 100%; height: 300px;"></canvas>
+            </div>
+        </div>
+
+        @section Scripts {
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                const ctx = document.getElementById('inventoryChart');
+
+                // Mengambil data dari ViewBag (Raw untuk menghindari encoding karakter)
+                const labels = @Html.Raw(ViewBag.ChartLabels);
+                const dataValues = @Html.Raw(ViewBag.ChartData);
+
+                new Chart(ctx, {
+                    type: 'bar', // Anda bisa ganti ke 'pie' atau 'doughnut'
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Jumlah Unit',
+                            data: dataValues,
+                            backgroundColor: [
+                                'rgba(13, 110, 253, 0.8)',
+                                'rgba(25, 135, 84, 0.8)',
+                                'rgba(255, 193, 7, 0.8)',
+                                'rgba(220, 53, 69, 0.8)',
+                                'rgba(13, 202, 240, 0.8)'
+                            ],
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            </script>
+        }
+
+        <div class="card shadow mt-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Aktivitas Gudang Terbaru</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Produk</th>
+                            <th>Tipe</th>
+                            <th>Jumlah</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var move in ViewBag.RecentMovements)
+                        {
+                            <tr>
+                                <td>@move.DateOccurred.ToString("HH:mm")</td>
+                                <td>@move.Product?.Name</td>
+                                <td>
+                                    <span class="badge @(move.Type == "Inbound" ? "bg-success" : "bg-danger")">
+                                        @move.Type
+                                    </span>
+                                </td>
+                                <td>@(move.QuantityChanged > 0 ? "+" : "")@move.QuantityChanged</td>
+                                <td>@move.UserName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</div>

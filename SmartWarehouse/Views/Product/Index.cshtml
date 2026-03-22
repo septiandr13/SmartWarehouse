@@ -1,0 +1,72 @@
+﻿@model IEnumerable<SmartWarehouse.Models.Product>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Smart Warehouse Stock</h2>
+        <div class="d-flex gap-2">
+            <a asp-action="Create" class="btn btn-primary">Tambah Barang Baru</a>
+            <a asp-action="DownloadStockReport" class="btn btn-outline-danger">
+                <i class="bi bi-file-earpdf"></i> Cetak PDF
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>SKU</th>
+                <th>Nama Barang</th>
+                <th>Jumlah Stok</th>
+                <th>Update Terakhir</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="@(item.StockQuantity < 5 ? "table-danger" : "") align-middle">
+                    <td>@item.SKU</td>
+                    <td>@item.Name</td>
+                    <td>
+                        @item.StockQuantity
+                        @if (item.StockQuantity < 5)
+                        {
+                            <span class="badge bg-danger">Low Stock!</span>
+                        }
+                    </td>
+                    <td>@item.LastUpdated.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" id="deleteForm-@item.Id">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('@item.Id', '@item.Name')">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </form>
+
+                            <script>
+                                function confirmDelete(id, name) {
+                                    Swal.fire({
+                                        title: 'Apakah Anda yakin?',
+                                        text: "Barang '" + name + "' akan dihapus permanen!",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#d33',
+                                        cancelButtonColor: '#3085d6',
+                                        confirmButtonText: 'Ya, Hapus!',
+                                        cancelButtonText: 'Batal'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            document.getElementById('deleteForm-' + id).submit();
+                                        }
+                                    })
+                                }
+                            </script>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

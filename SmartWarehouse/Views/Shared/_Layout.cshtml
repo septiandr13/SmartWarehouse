@@ -4,52 +4,177 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SmartWarehouse</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/SmartWarehouse.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <style>
+        body {
+            overflow-x: hidden;
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #wrapper {
+            display: flex;
+            align-items: stretch;
+            width: 100%;
+        }
+
+        /* SIDEBAR STYLE */
+        #sidebar {
+            min-width: 260px;
+            max-width: 260px;
+            background: #212529;
+            color: #fff;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+            /* Class untuk menutup sidebar */
+            #sidebar.active {
+                margin-left: -260px;
+            }
+
+            #sidebar .sidebar-header {
+                padding: 25px 20px;
+                background: #1a1d20;
+                border-bottom: 1px solid #343a40;
+            }
+
+            #sidebar ul.components {
+                padding: 20px 0;
+            }
+
+            #sidebar ul li a {
+                padding: 12px 25px;
+                font-size: 1.1em;
+                display: block;
+                color: #adb5bd;
+                text-decoration: none;
+                transition: 0.2s;
+            }
+
+                #sidebar ul li a:hover {
+                    color: #fff;
+                    background: #343a40;
+                }
+
+                #sidebar ul li a i {
+                    margin-right: 15px;
+                    width: 20px;
+                    text-align: center;
+                }
+
+        /* CONTENT STYLE */
+        #content {
+            width: 100%;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        .top-navbar {
+            background: #fff;
+            padding: 15px 25px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+        }
+
+        .main-container {
+            padding: 30px;
+        }
+
+        /* RESPONSIVE @@media */
+        @@media (max-width: 768px) {
+            #sidebar {
+                margin-left: -260px;
+            }
+
+                #sidebar.active {
+                    margin-left: 0;
+                }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SmartWarehouse</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+
+    <div id="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header text-center">
+                <h4 class="text-primary fw-bold mb-0">SMART</h4>
+                <span class="text-white-50 small text-uppercase">Warehouse System</span>
+            </div>
+
+            <ul class="list-unstyled components flex-grow-1">
+                <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "bg-dark" : "")">
+                    <a asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-speedometer2 text-primary"></i> Dashboard
+                    </a>
+                </li>
+                <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" ? "bg-dark" : "")">
+                    <a asp-controller="Product" asp-action="Index">
+                        <i class="bi bi-box-seam text-warning"></i> Inventory
+                    </a>
+                </li>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a href="#"><i class="bi bi-people text-info"></i> User Management</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="bi bi-gear text-secondary"></i> Settings</a>
+                    </li>
+                }
+            </ul>
+
+            <div class="sidebar-footer p-3 border-top border-secondary">
+                <partial name="_LoginPartial" />
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+        <div id="content">
+            <nav class="top-navbar">
+                <button type="button" id="sidebarCollapse" class="btn btn-dark shadow-none">
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <div class="ms-4 h5 mb-0 text-dark fw-semibold">
+                    @ViewData["Title"]
+                </div>
+            </nav>
+
+            <div class="main-container">
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - SmartWarehouse - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const btn = document.getElementById('sidebarCollapse');
+            const sidebar = document.getElementById('sidebar');
+
+            if(btn && sidebar) {
+                btn.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

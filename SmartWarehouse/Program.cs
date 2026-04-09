@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
+using SmartWarehouse.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,16 +17,31 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // 2. IDENTITY CONFIGURATION (Penting: Menggunakan AddIdentity, bukan AddDefaultIdentity)
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
     options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireDigit = false;
+    options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders()
 .AddDefaultUI();
 
+//Akses prduct untuk admin
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/Home/Index";
+
+    options.LoginPath = "/Identity/Account/Login";
+});
+
+// 1.Daftarkan EmailService dasar Anda
+builder.Services.AddTransient<IEmailService, EmailService>();
+
+// 2. Daftarkan IdentityEmailSender sebagai implementasi IEmailSender
+builder.Services.AddTransient<IEmailSender, IdentityEmailSender>();
+
+builder.Services.AddTransient<IEmailService, EmailService>();
 var app = builder.Build();
 
 IWebHostEnvironment env = app.Environment;

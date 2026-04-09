@@ -4,36 +4,52 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Tambah Barang Baru</h4>
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5>Tambah Produk Baru</h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Create">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Scan Barcode / Input SKU</label>
+                                <div class="input-group">
+                                    <input id="SKUInput" name="SKU" class="form-control" placeholder="Scan atau ketik SKU..." required />
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#scannerModal">
+                                        <i class="bi bi-camera"></i> Scan
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Nama Produk</label>
+                                <input name="Name" class="form-control" required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Jumlah Stok Awal</label>
+                                <input name="StockQuantity" type="number" class="form-control" value="0" required />
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100">Simpan Produk</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form asp-action="Create" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="SKU" class="form-label font-weight-bold"></label>
-                            <input asp-for="SKU" class="form-control" placeholder="Contoh: BRG-001" />
-                            <span asp-validation-for="SKU" class="text-danger"></span>
+                <div class="modal fade" id="scannerModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Scan Barcode Barang</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopScanner()"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="reader" style="width: 100%"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="stopScanner()">Batal</button>
+                            </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Name" class="form-label font-weight-bold">Nama Barang</label>
-                            <input asp-for="Name" class="form-control" placeholder="Masukkan nama barang" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="StockQuantity" class="form-label font-weight-bold">Jumlah Stok</label>
-                            <input asp-for="StockQuantity" type="number" class="form-control" />
-                            <span asp-validation-for="StockQuantity" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <a asp-action="Index" class="btn btn-secondary">Kembali</a>
-                            <button type="submit" class="btn btn-success">Simpan Barang</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,5 +59,55 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script>
+            let html5QrCode;
+
+            function onScanSuccess(decodedText, decodedResult) {
+                // 1. Masukkan hasil scan ke input SKU
+                document.getElementById('SKUInput').value = decodedText;
+
+                // 2. Beri notifikasi suara atau getar (opsional)
+                if (navigator.vibrate) navigator.vibrate(100);
+
+                // 3. Tutup modal secara otomatis
+                stopScanner();
+                var modal = bootstrap.Modal.getInstance(document.getElementById('scannerModal'));
+                modal.hide();
+
+                // 4. Beri feedback visual (SweetAlert)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Barcode Terdeteksi',
+                    text: 'SKU: ' + decodedText,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+
+            // Jalankan scanner saat modal dibuka
+            document.getElementById('scannerModal').addEventListener('shown.bs.modal', function () {
+                html5QrCode = new Html5Qrcode("reader");
+                const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+
+                html5QrCode.start(
+                    { facingMode: "environment" }, // Pakai kamera belakang HP
+                    config,
+                    onScanSuccess
+                ).catch(err => {
+                    console.error("Gagal akses kamera: ", err);
+                    alert("Kamera tidak diizinkan atau tidak ditemukan.");
+                });
+            });
+
+            function stopScanner() {
+                if (html5QrCode) {
+                    html5QrCode.stop().then((ignore) => {
+                        console.log("Scanner Stopped");
+                    }).catch((err) => {
+                        console.error("Gagal menghentikan scanner: ", err);
+                    });
+                }
+            }
+        </script>
     }
 }

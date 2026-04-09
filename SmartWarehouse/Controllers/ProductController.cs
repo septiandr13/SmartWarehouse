@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
 using SmartWarehouse.Models;
+using SmartWarehouse.Services;
 
 namespace SmartWarehouse.Controllers
 {
-    public class ProductController(ApplicationDbContext context) : Controller
+    [Authorize(Roles ="Admin")]
+    public class ProductController(ApplicationDbContext context, IEmailService emailService) : Controller
     {
         // Menampilkan daftar stok gudang
         public async Task<IActionResult> Index()
@@ -16,9 +18,11 @@ namespace SmartWarehouse.Controllers
         }
 
         // Form Tambah Barang
+        [Authorize(Roles ="Admin")]
         public IActionResult Create() => View();
 
         [HttpPost]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
@@ -56,21 +60,21 @@ namespace SmartWarehouse.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Product product)
         {
-            if (id != product.Id) return NotFound();
-
             if (ModelState.IsValid)
             {
-                try
+                context.Update(product);
+                await context.SaveChangesAsync();
+
+                if (product.StockQuantity < 10)
                 {
-                    product.LastUpdated = DateTime.Now; // Update waktu otomatis
-                    context.Update(product);
-                    await context.SaveChangesAsync();
+                    string subject = $"🚨 PERINGATAN STOK RENDAH: {product.Name}";
+                    string message = $@"<h3>Stok Kritis!</h3>
+                                <p>Barang <b>{product.Name}</b> (SKU: {product.SKU}) saat ini hanya tersisa <b>{product.StockQuantity}</b> unit.</p>
+                                <p>Segera lakukan pemesanan ulang (Restock).</p>";
+
+                    await emailService.SendEmailAsync("yayansky65@gmail.com", subject, message);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!context.Products.Any(e => e.Id == id)) return NotFound();
-                    else throw;
-                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -102,5 +106,7 @@ namespace SmartWarehouse.Controllers
                 CustomSwitches = "--footer-center [page]/[toPage]"
             };
         }
+
+        
     }
 }

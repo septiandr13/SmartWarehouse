@@ -20,4 +20,11 @@ namespace SmartWarehouse.Models
         public required string RackName { get; set; }
         public bool IsOccupied { get; set; }
     }
+    // Models/AppSetting.cs
+    public class AppSetting
+    {
+        public int Id { get; set; }
+        public string Key { get; set; } // Contoh: "WarehouseName"
+        public string Value { get; set; } // Contoh: "Gudang Utama Jakarta"
+    }
 }

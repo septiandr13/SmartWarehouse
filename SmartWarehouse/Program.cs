@@ -6,15 +6,27 @@ using SmartWarehouse.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. SERVICES CONFIGURATION
+// ==========================================
+// 1. REGISTRASI SERVICES (Pendaftaran)
+// Harus dilakukan SEBELUM builder.Build()
+// ==========================================
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// Swagger Configuration (Pindahkan ke sini agar tidak read-only)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Database Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 2. IDENTITY CONFIGURATION (Penting: Menggunakan AddIdentity, bukan AddDefaultIdentity)
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Identity Configuration
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
@@ -27,27 +39,57 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
 .AddDefaultTokenProviders()
 .AddDefaultUI();
 
-//Akses prduct untuk admin
+// Cookie & Access Configuration
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.AccessDeniedPath = "/Home/Index";
-
     options.LoginPath = "/Identity/Account/Login";
 });
 
-// 1.Daftarkan EmailService dasar Anda
+// Dependency Injection untuk Email Services
 builder.Services.AddTransient<IEmailService, EmailService>();
-
-// 2. Daftarkan IdentityEmailSender sebagai implementasi IEmailSender
 builder.Services.AddTransient<IEmailSender, IdentityEmailSender>();
 
-builder.Services.AddTransient<IEmailService, EmailService>();
+// ==========================================
+// 2. BUILD APLIKASI
+// ==========================================
 var app = builder.Build();
+
+// ==========================================
+// 3. MIDDLEWARE & HTTP PIPELINE
+// Harus dilakukan SETELAH builder.Build()
+// ==========================================
 
 IWebHostEnvironment env = app.Environment;
 RotativaConfiguration.Setup(env.WebRootPath, "Rotativa");
 
-// 3. SEEDING ROLES & ADMIN USER
+// Konfigurasi Swagger UI (Hanya di Development)
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Smart Warehouse API V1");
+    });
+}
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+// Urutan Authentication harus sebelum Authorization
+app.UseAuthentication();
+app.UseAuthorization();
+
+// ==========================================
+// 4. SEEDING ROLES & ADMIN USER
+// ==========================================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -66,7 +108,7 @@ using (var scope = app.Services.CreateScope())
             }
         }
 
-        // Buat User Admin Default (Ganti email & password sesuai keinginan)
+        // Buat User Admin Default
         string adminEmail = "admin@warehouse.com";
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -87,22 +129,9 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// 4. HTTP REQUEST PIPELINE
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-// Urutan Authentication harus sebelum Authorization
-app.UseAuthentication();
-app.UseAuthorization();
-
+// ==========================================
+// 5. MAPPING ROUTES
+// ==========================================
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",

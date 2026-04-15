@@ -1,0 +1,27 @@
+﻿@model IEnumerable<SmartWarehouse.Models.AppSetting>
+@{
+    ViewData["Title"] = "System Settings";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="bi bi-gear"></i> Pengaturan Umum</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var item in Model)
+                {
+                    <form asp-action="Update" method="post" class="mb-3 border-bottom pb-3">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <label class="form-label fw-bold">@item.Key</label>
+                        <div class="input-group">
+                            <input name="value" value="@item.Value" class="form-control" />
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

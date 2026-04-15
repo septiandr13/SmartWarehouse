@@ -38,15 +38,34 @@
                 <div class="modal fade" id="scannerModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Scan Barcode Barang</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopScanner()"></button>
+                            <div class="modal-header bg-dark text-white">
+                                <h5 class="modal-title"><i class="bi bi-qr-code-scan"></i> Scan Barang</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="stopScanner()"></button>
                             </div>
                             <div class="modal-body">
-                                <div id="reader" style="width: 100%"></div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="stopScanner()">Batal</button>
+                                <ul class="nav nav-pills nav-fill mb-3" id="scanTab" role="tablist">
+                                    <li class="nav-item">
+                                        <button class="nav-link active" id="camera-tab" data-bs-toggle="pill" data-bs-target="#camera-pane" type="button" onclick="startCamera()">Kamera</button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link" id="file-tab" data-bs-toggle="pill" data-bs-target="#file-pane" type="button" onclick="stopScanner()">Upload File</button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="camera-pane">
+                                        <div id="reader" style="width: 100%"></div>
+                                    </div>
+
+                                    <div class="tab-pane fade text-center p-4" id="file-pane">
+                                        <label for="qr-input-file" class="btn btn-outline-primary p-4 border-dashed w-100">
+                                            <i class="bi bi-cloud-arrow-up fs-1"></i><br>
+                                            Pilih Gambar Barcode
+                                        </label>
+                                        <input type="file" id="qr-input-file" accept="image/*" class="d-none">
+                                        <div id="file-result-name" class="mt-2 small text-muted"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -62,52 +81,83 @@
         <script>
             let html5QrCode;
 
-            function onScanSuccess(decodedText, decodedResult) {
-                // 1. Masukkan hasil scan ke input SKU
+                        function onScanSuccess(decodedText) {
+                // 1. Isi input SKU
                 document.getElementById('SKUInput').value = decodedText;
 
-                // 2. Beri notifikasi suara atau getar (opsional)
-                if (navigator.vibrate) navigator.vibrate(100);
+                // 2. OTOMATIS CARI NAMA PRODUK
+                fetch(`/Product/GetNameBySKU?sku=${decodedText}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const nameInput = document.querySelector('input[name="Name"]');
 
-                // 3. Tutup modal secara otomatis
+                        if (data.success) {
+                            // Jika produk sudah pernah ada, isi namanya otomatis
+                            nameInput.value = data.name;
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Produk Terdeteksi',
+                                text: 'Nama produk otomatis terisi.',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            // Jika produk benar-benar baru, kosongkan agar admin isi manual
+                            nameInput.value = "";
+                            nameInput.placeholder = "Produk baru, silakan beri nama...";
+                            nameInput.focus();
+                        }
+                    });
+
+                // Tutup Modal dan matikan kamera
                 stopScanner();
                 var modal = bootstrap.Modal.getInstance(document.getElementById('scannerModal'));
                 modal.hide();
-
-                // 4. Beri feedback visual (SweetAlert)
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Barcode Terdeteksi',
-                    text: 'SKU: ' + decodedText,
-                    timer: 1500,
-                    showConfirmButton: false
-                });
             }
 
-            // Jalankan scanner saat modal dibuka
-            document.getElementById('scannerModal').addEventListener('shown.bs.modal', function () {
-                html5QrCode = new Html5Qrcode("reader");
-                const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+            // FUNGSI SCAN DARI FILE (UPLOAD)
+            document.getElementById('qr-input-file').addEventListener('change', e => {
+                if (e.target.files.length == 0) return;
 
-                html5QrCode.start(
-                    { facingMode: "environment" }, // Pakai kamera belakang HP
-                    config,
-                    onScanSuccess
-                ).catch(err => {
-                    console.error("Gagal akses kamera: ", err);
-                    alert("Kamera tidak diizinkan atau tidak ditemukan.");
-                });
+                const imageFile = e.target.files[0];
+                document.getElementById('file-result-name').innerText = "Memproses: " + imageFile.name;
+
+                // Inisialisasi scanner jika belum ada
+                const fileScanner = new Html5Qrcode("reader");
+
+                fileScanner.scanFile(imageFile, true)
+                    .then(decodedText => {
+                        onScanSuccess(decodedText);
+                    })
+                    .catch(err => {
+                        Swal.fire('Gagal', 'Barcode tidak terdeteksi dalam gambar ini.', 'error');
+                        document.getElementById('file-result-name').innerText = "";
+                    });
             });
 
+            // FUNGSI KAMERA
+            function startCamera() {
+                html5QrCode = new Html5Qrcode("reader");
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 250, height: 150 } },
+                    onScanSuccess
+                ).catch(err => console.error(err));
+            }
+
             function stopScanner() {
-                if (html5QrCode) {
-                    html5QrCode.stop().then((ignore) => {
-                        console.log("Scanner Stopped");
-                    }).catch((err) => {
-                        console.error("Gagal menghentikan scanner: ", err);
-                    });
+                if (html5QrCode && html5QrCode.isScanning) {
+                    html5QrCode.stop().catch(err => console.error(err));
                 }
             }
+
+            // Reset saat modal dibuka
+            document.getElementById('scannerModal').addEventListener('shown.bs.modal', function () {
+                // Default buka kamera jika di tab kamera
+                if(document.getElementById('camera-tab').classList.contains('active')) {
+                    startCamera();
+                }
+            });
         </script>
     }
 }

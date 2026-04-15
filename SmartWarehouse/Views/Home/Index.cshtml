@@ -80,7 +80,7 @@
                 const dataValues = @Html.Raw(ViewBag.ChartData);
 
                 new Chart(ctx, {
-                    type: 'bar', // Anda bisa ganti ke 'pie' atau 'doughnut'
+                    type: 'pie', // Anda bisa ganti ke 'pie' atau 'doughnut'
                     data: {
                         labels: labels,
                         datasets: [{

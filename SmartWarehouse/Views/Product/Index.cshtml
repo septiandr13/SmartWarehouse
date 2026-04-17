@@ -1,87 +1,194 @@
 ﻿@model IEnumerable<SmartWarehouse.Models.Product>
 
+@{
+    ViewData["Title"] = "Product Management";
+}
+
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Smart Warehouse Stock</h2>
-        <div class="d-flex gap-2">
-            @* Hanya Admin yang bisa melihat tombol Tambah *@
+
+    <!-- HEADER -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-2">
+        <h2 class="mb-0">📦 Smart Warehouse Stock</h2>
+
+        <div class="d-flex gap-2 flex-wrap">
             @if (User.IsInRole("Admin"))
             {
                 <a asp-action="Create" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Tambah Barang Baru
+                    <i class="bi bi-plus-circle"></i> Tambah Barang
                 </a>
             }
 
             <a asp-action="DownloadStockReport" class="btn btn-outline-danger">
-                <i class="bi bi-file-earpdf"></i> Cetak PDF
+                <i class="bi bi-file-earpdf"></i> PDF
             </a>
         </div>
     </div>
 
-    <table class="table table-striped table-bordered shadow-sm">
-        <thead class="table-dark">
-            <tr>
-                <th>SKU</th>
-                <th>Nama Barang</th>
-                <th>Jumlah Stok</th>
-                <th>Update Terakhir</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr class="@(item.StockQuantity < 5 ? "table-danger" : "") align-middle">
-                    <td>@item.SKU</td>
-                    <td>@item.Name</td>
-                    <td>
-                        <span class="fw-bold">@item.StockQuantity</span>
+    <!-- SEARCH & FILTER -->
+    <div class="row mb-3">
+        <div class="col-md-6 mb-2">
+            <input type="text" id="searchInput" class="form-control" placeholder="Cari nama barang / SKU...">
+        </div>
+
+        <div class="col-md-3 mb-2">
+            <select id="filterStock" class="form-select">
+                <option value="all">Semua</option>
+                <option value="low">Low Stock (&lt; 5)</option>
+            </select>
+        </div>
+    </div>
+
+
+    <!-- ================= DESKTOP TABLE ================= -->
+    <div class="d-none d-md-block">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle" id="productTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SKU</th>
+                        <th>Nama</th>
+                        <th>Stok</th>
+                        <th>Update</th>
+                        <th style="width:180px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="product-row @(item.StockQuantity < 5 ? "table-danger" : "")"
+                            data-name="@item.Name.ToLower()"
+                            data-sku="@item.SKU.ToLower()"
+                            data-stock="@item.StockQuantity">
+
+                            <td>@item.SKU</td>
+                            <td class="text-break">@item.Name</td>
+                            <td>
+                                <strong>@item.StockQuantity</strong>
+                                @if (item.StockQuantity < 5)
+                                {
+                                    <span class="badge bg-danger">Low</span>
+                                }
+                            </td>
+                            <td>@item.LastUpdated.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning w-100">Edit</a>
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" id="deleteForm-@item.Id" class="w-100">
+                                            <button type="button" class="btn btn-sm btn-danger w-100"
+                                                    onclick="confirmDelete('@item.Id', '@item.Name')">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- ================= MOBILE CARD ================= -->
+    <div class="d-md-none" id="mobileContainer">
+        @foreach (var item in Model)
+        {
+            <div class="card mb-3 product-card @(item.StockQuantity < 5 ? "border-danger" : "")"
+                 data-name="@item.Name.ToLower()"
+                 data-sku="@item.SKU.ToLower()"
+                 data-stock="@item.StockQuantity">
+
+                <div class="card-body">
+
+                    <div><strong>SKU:</strong> @item.SKU</div>
+                    <div class="text-break"><strong>Nama:</strong> @item.Name</div>
+
+                    <div>
+                        <strong>Stok:</strong>
+                        @item.StockQuantity
                         @if (item.StockQuantity < 5)
                         {
-                            <span class="badge bg-danger">Low Stock!</span>
+                            <span class="badge bg-danger">Low</span>
                         }
-                    </td>
-                    <td>@item.LastUpdated.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>
-                        <div class="d-flex gap-2">
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil"></i> Edit
-                            </a>
+                    </div>
 
-                            @* Hanya Admin yang bisa melihat tombol Hapus *@
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" id="deleteForm-@item.Id">
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('@item.Id', '@item.Name')">
-                                        <i class="bi bi-trash"></i> Hapus
-                                    </button>
-                                </form>
-                            }
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    <div class="mb-2">
+                        <small>@item.LastUpdated.ToString("dd/MM/yyyy HH:mm")</small>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning w-100">Edit</a>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <form id="deleteForm-@item.Id" asp-action="Delete" asp-route-id="@item.Id" method="post"></form>
+
+                            <button onclick="confirmDelete(@item.Id, '@item.Name')"
+                                    class="btn btn-danger btn-sm">
+                                Hapus
+                            </button>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section Scripts {
     <script>
+
+        // 🔍 SEARCH + FILTER
+        function filterData() {
+            let keyword = document.getElementById("searchInput").value.toLowerCase();
+            let filter = document.getElementById("filterStock").value;
+
+            document.querySelectorAll(".product-row, .product-card").forEach(el => {
+                let name = el.dataset.name;
+                let sku = el.dataset.sku;
+                let stock = parseInt(el.dataset.stock);
+
+                let matchSearch = name.includes(keyword) || sku.includes(keyword);
+                let matchFilter = (filter === "all") || (filter === "low" && stock < 5);
+
+                el.style.display = (matchSearch && matchFilter) ? "" : "none";
+            });
+        }
+
+        document.getElementById("searchInput").addEventListener("keyup", filterData);
+        document.getElementById("filterStock").addEventListener("change", filterData);
+
+
+        // ❌ DELETE CONFIRM
         function confirmDelete(id, name) {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Barang '" + name + "' akan dihapus permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
+
+            if (typeof Swal === 'undefined') {
+                if (confirm("Hapus '" + name + "'?")) {
                     document.getElementById('deleteForm-' + id).submit();
                 }
-            })
+                return;
         }
+
+        Swal.fire({
+            title: 'Yakin?',
+            text: `Hapus '${name}'?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus!'
+        }).then(result => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm-' + id).submit();
+            }
+        });
+        }
+
     </script>
 }

@@ -59,3 +59,10 @@ wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\Rotativa\wkhtmltopdf.exe
+wwwroot\uploads\106795bf-879e-420a-ace1-6cc3fce73fa9_images.png
+wwwroot\uploads\92f24681-3871-4a7b-ae84-0bb33c943ba5_Stock_Report_20260408.pdf
+wwwroot\uploads\959e2bd8-4466-4c5f-9ac0-99ea1d73f22d_Dokumentasi_Migrasi_NET_Developer.docx
+wwwroot\uploads\9cb123f1-38ff-4202-9335-779241a3a171_images.png
+wwwroot\uploads\a6650462-52de-499d-98bd-9550721087c7_6D8F0BF2-DE57-4B40-98DB-70CB4FAF2591.jpeg
+wwwroot\uploads\e5ce2849-d6ff-423b-a6ae-fc251c831ccf_images.png
+wwwroot\uploads\f5103aae-643c-4efa-a3a0-7d5e3a808952_images.png

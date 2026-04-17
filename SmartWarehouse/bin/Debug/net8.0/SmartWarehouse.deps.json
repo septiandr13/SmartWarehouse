@@ -20,6 +20,7 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "8.0.7",
           "Rotativa.AspNetCore": "1.4.0",
           "Swashbuckle.AspNetCore": "10.1.7",
+          "dropzone": "4.3.0",
           "xunit.extensibility.core": "2.9.3"
         },
         "runtime": {
@@ -68,6 +69,7 @@
           }
         }
       },
+      "dropzone/4.3.0": {},
       "Humanizer/2.14.1": {
         "dependencies": {
           "Humanizer.Core.af": "2.14.1",
@@ -2286,6 +2288,13 @@
       "sha512": "sha512-7oWOcvnntmMKNzDLsdxAYqApt+AjpRpP2CShjMfIa3umZ42UQMvH0tl1qAliYPNYO6vTdcGMqnRrCPmsfzTI1w==",
       "path": "bouncycastle.cryptography/2.6.2",
       "hashPath": "bouncycastle.cryptography.2.6.2.nupkg.sha512"
+    },
+    "dropzone/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-erwoK0GJ+gDfphtbBOjUkdoe/MBDbTVwd2DvvgNdULgJmZvOHrnbZQJH6GnbMXf9wa463sASZG102ZYbSw+e/Q==",
+      "path": "dropzone/4.3.0",
+      "hashPath": "dropzone.4.3.0.nupkg.sha512"
     },
     "Humanizer/2.14.1": {
       "type": "package",

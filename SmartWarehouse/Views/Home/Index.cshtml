@@ -3,143 +3,165 @@
 }
 
 <div class="container mt-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2 class="display-5 font-weight-bold">Smart Warehouse Overview</h2>
-            <p class="text-muted">Selamat datang kembali! Berikut status gudang Anda saat ini.</p>
-        </div>
+
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h2 class="fw-bold">📊 Smart Warehouse Dashboard</h2>
+        <p class="text-muted">Monitoring stok & aktivitas gudang secara real-time</p>
     </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card bg-primary text-white shadow mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1">Total SKU</h6>
-                            <h2 class="mb-0">@ViewBag.TotalProducts</h2>
-                        </div>
-                        <i class="bi bi-box-seam fs-1"></i>
+    <!-- KPI CARDS -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">Total SKU</small>
+                        <h3 class="fw-bold">@ViewBag.TotalProducts</h3>
+                    </div>
+                    <div class="bg-primary text-white rounded-circle p-3">
+                        <i class="bi bi-box-seam fs-4"></i>
                     </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between small">
-                    <a class="text-white stretched-link" asp-controller="Product" asp-action="Index">Lihat Detail</a>
+                <div class="card-footer bg-transparent border-0">
+                    <a asp-controller="Product" asp-action="Index" class="small text-decoration-none">
+                        Lihat Produk →
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card bg-success text-white shadow mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1">Total Item Fisik</h6>
-                            <h2 class="mb-0">@ViewBag.TotalStock</h2>
-                        </div>
-                        <i class="bi bi-stack fs-1"></i>
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">Total Item</small>
+                        <h3 class="fw-bold">@ViewBag.TotalStock</h3>
+                    </div>
+                    <div class="bg-success text-white rounded-circle p-3">
+                        <i class="bi bi-stack fs-4"></i>
                     </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between small">
-                    <span class="text-white">Kapasitas Terpakai</span>
+                <div class="card-footer bg-transparent border-0">
+                    <span class="small text-muted">Kapasitas gudang</span>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card @(ViewBag.LowStockCount > 0 ? "bg-danger" : "bg-secondary") text-white shadow mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1">Stok Kritis (< 10)</h6>
-                            <h2 class="mb-0">@ViewBag.LowStockCount</h2>
-                        </div>
-                        <i class="bi bi-exclamation-triangle fs-1"></i>
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm border-0 h-100 @(ViewBag.LowStockCount > 0 ? "border-danger" : "")">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">Stok Kritis</small>
+                        <h3 class="fw-bold text-danger">@ViewBag.LowStockCount</h3>
+                    </div>
+                    <div class="bg-danger text-white rounded-circle p-3">
+                        <i class="bi bi-exclamation-triangle fs-4"></i>
                     </div>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between small">
-                    <span class="text-white">Perlu Restock Segera</span>
+                <div class="card-footer bg-transparent border-0">
+                    <span class="small text-danger">Perlu restock segera</span>
                 </div>
             </div>
         </div>
-        <div class="card shadow mt-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-bar-chart-line"></i> Top 5 Stok Barang Terbanyak</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="inventoryChart" style="width: 100%; height: 300px;"></canvas>
+
+    </div>
+
+
+    <!-- CHART + ACTIVITY -->
+    <div class="row g-4">
+
+        <!-- CHART -->
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-0">
+                    <h6 class="mb-0 fw-bold">📈 Top 5 Produk (Stok Terbanyak)</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="inventoryChart" style="height:300px;"></canvas>
+                </div>
             </div>
         </div>
 
-        @section Scripts {
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                const ctx = document.getElementById('inventoryChart');
+        <!-- ACTIVITY -->
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-0">
+                    <h6 class="mb-0 fw-bold">🕒 Aktivitas Terbaru</h6>
+                </div>
 
-                // Mengambil data dari ViewBag (Raw untuk menghindari encoding karakter)
-                const labels = @Html.Raw(ViewBag.ChartLabels);
-                const dataValues = @Html.Raw(ViewBag.ChartData);
-
-                new Chart(ctx, {
-                    type: 'pie', // Anda bisa ganti ke 'pie' atau 'doughnut'
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Jumlah Unit',
-                            data: dataValues,
-                            backgroundColor: [
-                                'rgba(13, 110, 253, 0.8)',
-                                'rgba(25, 135, 84, 0.8)',
-                                'rgba(255, 193, 7, 0.8)',
-                                'rgba(220, 53, 69, 0.8)',
-                                'rgba(13, 202, 240, 0.8)'
-                            ],
-                            borderColor: '#fff',
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
-            </script>
-        }
-
-        <div class="card shadow mt-4">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0">Aktivitas Gudang Terbaru</h5>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Waktu</th>
-                            <th>Produk</th>
-                            <th>Tipe</th>
-                            <th>Jumlah</th>
-                            <th>User</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var move in ViewBag.RecentMovements)
-                        {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <td>@move.DateOccurred.ToString("HH:mm")</td>
-                                <td>@move.Product?.Name</td>
-                                <td>
-                                    <span class="badge @(move.Type == "Inbound" ? "bg-success" : "bg-danger")">
-                                        @move.Type
-                                    </span>
-                                </td>
-                                <td>@(move.QuantityChanged > 0 ? "+" : "")@move.QuantityChanged</td>
-                                <td>@move.UserName</td>
+                                <th>Waktu</th>
+                                <th>Produk</th>
+                                <th>Tipe</th>
+                                <th>Qty</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var move in ViewBag.RecentMovements)
+                            {
+                                <tr>
+                                    <td>@move.DateOccurred.ToString("HH:mm")</td>
+                                    <td class="text-break">@move.Product?.Name</td>
+                                    <td>
+                                        <span class="badge @(move.Type == "Inbound" ? "bg-success" : "bg-danger")">
+                                            @move.Type
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <strong>@(move.QuantityChanged > 0 ? "+" : "")@move.QuantityChanged</strong>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
+
+    </div>
+
 </div>
+
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    const ctx = document.getElementById('inventoryChart');
+
+    const labels = @Html.Raw(ViewBag.ChartLabels);
+    const dataValues = @Html.Raw(ViewBag.ChartData);
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: dataValues,
+                backgroundColor: [
+                    '#0d6efd',
+                    '#198754',
+                    '#ffc107',
+                    '#dc3545',
+                    '#0dcaf0'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+</script>
+}

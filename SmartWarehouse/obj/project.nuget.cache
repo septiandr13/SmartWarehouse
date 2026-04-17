@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "uTlSH0w20MM=",
+  "dgSpecHash": "qoe3DoYvCmQ=",
   "success": true,
   "projectFilePath": "D:\\Septiandr\\SmartWarehouse\\SmartWarehouse\\SmartWarehouse.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Septian_Dwi\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Septian_Dwi\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\Septian_Dwi\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
+    "C:\\Users\\Septian_Dwi\\.nuget\\packages\\dropzone\\4.3.0\\dropzone.4.3.0.nupkg.sha512",
     "C:\\Users\\Septian_Dwi\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\Septian_Dwi\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Septian_Dwi\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",

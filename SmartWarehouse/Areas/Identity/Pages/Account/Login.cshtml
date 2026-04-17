@@ -2,82 +2,173 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Selamat Datang Kembali!";
+    ViewData["Title"] = "Login";
 }
 
+<style>
+    body {
+        background-color: #f4f6f9;
+    }
+
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        background: #fff;
+        padding: 30px;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+        .login-header h3 {
+            font-weight: 600;
+        }
+
+    .form-control {
+        border-radius: 10px;
+    }
+
+    .btn-login {
+        background: #4f46e5;
+        color: #fff;
+        border-radius: 10px;
+        padding: 12px;
+        font-weight: 600;
+    }
+
+        .btn-login:hover {
+            background: #4338ca;
+        }
+
+    .divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+    }
+
+        .divider span {
+            background: #fff;
+            padding: 0 10px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: #ddd;
+            top: 50%;
+            left: 0;
+        }
+
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d;
+    }
+</style>
+
 <div class="login-container">
+
     <div class="login-card">
-        <div class="login-brand">
-            <div class="brand-content">
-                <img src="https://illustrations.popsy.co/amber/shaking-hands.svg" alt="Welcome" class="brand-img" />
-                <h2>Halo lagi! 👋</h2>
-                <p>Senang melihatmu kembali. Yuk, masuk ke akunmu!</p>
+
+        <div class="login-header">
+            <h3>Selamat Datang 👋</h3>
+            <p class="text-muted small">Silakan login ke akun Anda</p>
+        </div>
+
+        <form method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- EMAIL -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" placeholder="Email" />
+                <label>Email</label>
             </div>
-        </div>
 
-        <div class="login-form-section">
-            <form id="account" method="post">
-                <div class="form-header">
-                    <h3>Log In</h3>
-                    <p class="text-muted">Gunakan akun lokal atau layanan lain</p>
+            <!-- PASSWORD -->
+            <div class="form-floating mb-3 position-relative">
+                <input asp-for="Input.Password" id="password" class="form-control" placeholder="Password" />
+                <label>Password</label>
+                <i class="bi bi-eye toggle-password" onclick="togglePassword()"></i>
+            </div>
+
+            <!-- REMEMBER -->
+            <div class="d-flex justify-content-between mb-3">
+                <div class="form-check">
+                    <input asp-for="Input.RememberMe" class="form-check-input" />
+                    <label class="form-check-label">Ingat saya</label>
                 </div>
+                <a asp-page="./ForgotPassword" class="small">Lupa password?</a>
+            </div>
 
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+            <!-- BUTTON -->
+            <button type="submit" class="btn btn-login w-100" id="loginBtn">
+                Masuk
+            </button>
 
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control custom-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger small"></span>
-                </div>
+            <div class="divider"><span>atau</span></div>
 
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control custom-input" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="form-check custom-checkbox">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
-                        <label class="form-check-label" asp-for="Input.RememberMe">Ingat saya</label>
-                    </div>
-                    <a id="forgot-password" asp-page="./ForgotPassword" class="forgot-link">Lupa password?</a>
-                </div>
-
-                <button id="login-submit" type="submit" class="btn btn-login w-100">Masuk Sekarang</button>
-
-                <div class="divider">
-                    <span>atau masuk dengan</span>
-                </div>
-
-                <div class="external-logins mb-4">
-                    @{
-                        if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                        {
-                            <p class="text-muted small">Belum ada layanan eksternal.</p>
-                        }
-                        else
-                        {
-                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-outline-secondary w-100 mb-2" name="provider" value="@provider.Name">
-                                        Login dengan @provider.DisplayName
-                                    </button>
-                                }
-                            </form>
-                        }
+            <!-- EXTERNAL LOGIN -->
+            @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                <form asp-page="./ExternalLogin" method="post">
+                    @foreach (var provider in Model.ExternalLogins!)
+                    {
+                        <button class="btn btn-outline-secondary w-100 mb-2"
+                                name="provider" value="@provider.Name">
+                            Login dengan @provider.DisplayName
+                        </button>
                     }
-                </div>
+                </form>
+            }
+            else
+            {
+                <p class="text-muted small text-center">Tidak ada login eksternal</p>
+            }
 
-                <p class="text-center mb-0">
-                    Belum punya akun? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="register-link">Daftar di sini</a>
-                </p>
-            </form>
-        </div>
+            <p class="text-center mt-3 small">
+                Belum punya akun?
+                <a asp-page="./Register">Daftar</a>
+            </p>
+
+        </form>
+
     </div>
+
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById("password");
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+        document.querySelector("form").addEventListener("submit", function () {
+            const btn = document.getElementById("loginBtn");
+            btn.innerHTML = "Loading...";
+            btn.disabled = true;
+        });
+    </script>
 }

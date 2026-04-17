@@ -27,4 +27,16 @@ namespace SmartWarehouse.Models
         public string Key { get; set; } // Contoh: "WarehouseName"
         public string Value { get; set; } // Contoh: "Gudang Utama Jakarta"
     }
+
+    public class FileDocument
+    {
+        public int Id { get; set; }
+        public string FileName { get; set; }     // Nama asli (contoh: laporan.pdf)
+        public string StoredFileName { get; set; } // Nama unik di server (contoh: guid_laporan.pdf)
+        public string FilePath { get; set; }     // Path relatif
+        public string ContentType { get; set; }  // Jenis file (image/png, application/pdf, dll)
+        public long FileSize { get; set; }       // Ukuran file dalam bytes
+        public DateTime UploadDate { get; set; } = DateTime.Now;
+        public string UserName { get; set; }
+    }
 }

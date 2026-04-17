@@ -276,6 +276,7 @@ D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.buil
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.build.json.cache
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.development.json
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWar.1C7FC1F0.Up2Date
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWarehouse.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\refint\SmartWarehouse.dll
@@ -283,4 +284,3 @@ D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWarehouse.xml
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWarehouse.pdb
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWarehouse.genruntimeconfig.cache
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\ref\SmartWarehouse.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

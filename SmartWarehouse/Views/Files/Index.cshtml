@@ -1,0 +1,142 @@
+﻿@model IEnumerable<SmartWarehouse.Models.FileDocument>
+
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" />
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+
+<div class="container-fluid">
+
+    <!-- UPLOADER -->
+    <div class="card shadow-sm border-0 rounded-3 mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="bi bi-cloud-arrow-up"></i> File Uploader
+            </h5>
+            <button class="btn btn-sm btn-light" onclick="location.reload();">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+        </div>
+
+        <div class="card-body">
+            <form action="/Files/Upload" class="dropzone" id="myDropzone">
+                <div class="dz-message needsclick text-center">
+                    <i class="bi bi-upload fs-1 text-primary"></i>
+                    <div class="mt-2 fw-semibold">Drag & Drop file di sini</div>
+                    <div class="text-muted small">
+                        atau klik untuk upload (Max 10MB)
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FILE LIST -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold">📂 Daftar File</h5>
+            <span class="text-muted small">@Model.Count() file</span>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Nama File</th>
+                            <th>Tipe</th>
+                            <th>Ukuran</th>
+                            <th>Tanggal</th>
+                            <th class="text-center pe-4">Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-semibold">
+                                    @item.FileName
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        @item.ContentType.Split('/')[1].ToUpper()
+                                    </span>
+                                </td>
+
+                                <td class="text-muted">
+                                    @((item.FileSize / 1024).ToString("N0")) KB
+                                </td>
+
+                                <td class="text-muted">
+                                    @item.UploadDate.ToString("dd MMM yyyy, HH:mm")
+                                </td>
+
+                                <td class="text-center pe-4">
+                                    <div class="d-flex justify-content-center gap-1">
+
+                                        <a href="@item.FilePath" target="_blank"
+                                           class="btn btn-sm btn-light border"
+                                           title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        <a href="@item.FilePath" download="@item.FileName"
+                                           class="btn btn-sm btn-light border"
+                                           title="Download">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+
+                                        <form asp-action="Delete" asp-route-id="@item.Id"
+                                              method="post"
+                                              onsubmit="return confirm('Hapus file ini?')">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-light border text-danger"
+                                                    title="Hapus">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        Dropzone.options.myDropzone = {
+            paramName: "file",
+            maxFilesize: 10,
+            acceptedFiles: ".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.zip",
+
+            init: function () {
+
+                this.on("success", function (file) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: file.name + ' berhasil diupload',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+
+                    // optional auto refresh list
+                    setTimeout(() => location.reload(), 1500);
+                });
+
+                this.on("error", function (file, message) {
+                    Swal.fire('Gagal', message, 'error');
+                });
+            }
+        };
+    </script>
+}

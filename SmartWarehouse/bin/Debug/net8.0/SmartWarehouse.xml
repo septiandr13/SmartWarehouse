@@ -160,15 +160,17 @@
         <member name="M:SmartWarehouse.Migrations.AddAppSettingTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:ProductController.Create(SmartWarehouse.Models.Product)">
-            <summary>
-            Menambah produk baru ke database
-            </summary>
+        <member name="T:SmartWarehouse.Migrations.AddFileDocument">
+            <inheritdoc />
         </member>
-        <member name="M:ProductController.GetNameBySKU(System.String)">
-            <summary>
-            Mencari nama produk berdasarkan barcode/SKU
-            </summary>
+        <member name="M:SmartWarehouse.Migrations.AddFileDocument.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:SmartWarehouse.Migrations.AddFileDocument.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:SmartWarehouse.Migrations.AddFileDocument.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
         </member>
     </members>
 </doc>

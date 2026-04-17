@@ -7,149 +7,227 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --sidebar-width: 280px;
+            --sidebar-bg: #1e1e2d;
+            --sidebar-hover: #2a2a3d;
+            --sidebar-text: #cfcfe2;
+            --primary-color: #4f46e5;
+            --content-bg: #f9fafb;
+            --navbar-bg: #ffffff;
+        }
+
         body {
+            margin: 0;
+            background: var(--content-bg);
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         #wrapper {
             display: flex;
-            align-items: stretch;
+            min-height: 100vh;
             width: 100%;
         }
 
-        /* SIDEBAR STYLE */
+        /* --- SIDEBAR --- */
         #sidebar {
-            min-width: 260px;
-            max-width: 260px;
-            background: #212529;
-            color: #fff;
-            transition: all 0.3s ease;
-            min-height: 100vh;
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            z-index: 1050;
         }
 
-            /* Class untuk menutup sidebar */
-            #sidebar.active {
-                margin-left: -260px;
+            /* Sembunyikan sidebar di desktop saat toggle */
+            #sidebar.collapsed {
+                margin-left: calc(-1 * var(--sidebar-width));
             }
 
-            #sidebar .sidebar-header {
-                padding: 25px 20px;
-                background: #1a1d20;
-                border-bottom: 1px solid #343a40;
-            }
+        .sidebar-header {
+            padding: 24px;
+            text-align: center;
+            background: rgba(0,0,0,0.1);
+        }
 
-            #sidebar ul.components {
-                padding: 20px 0;
-            }
+        #sidebar ul {
+            padding: 10px 0;
+            margin: 0;
+        }
 
             #sidebar ul li a {
-                padding: 12px 25px;
-                font-size: 1.1em;
-                display: block;
-                color: #adb5bd;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 20px;
+                color: var(--sidebar-text);
                 text-decoration: none;
                 transition: 0.2s;
+                margin: 4px 12px;
+                border-radius: 8px;
+                font-size: 0.95rem;
             }
 
                 #sidebar ul li a:hover {
+                    background: var(--sidebar-hover);
                     color: #fff;
-                    background: #343a40;
                 }
 
-                #sidebar ul li a i {
-                    margin-right: 15px;
-                    width: 20px;
-                    text-align: center;
-                }
+        .active-menu {
+            background: var(--primary-color) !important;
+            color: #fff !important;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
 
-        /* CONTENT STYLE */
+        /* --- CONTENT --- */
         #content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             width: 100%;
-            min-height: 100vh;
-            transition: all 0.3s;
+            min-width: 0; /* Penting untuk responsivitas */
         }
 
         .top-navbar {
-            background: #fff;
-            padding: 15px 25px;
-            border-bottom: 1px solid #dee2e6;
+            background: var(--navbar-bg);
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .main-container {
-            padding: 30px;
+            padding: 24px;
+            flex: 1;
         }
 
-        /* RESPONSIVE @@media */
-        @@media (max-width: 768px) {
+        /* --- OVERLAY (Mobile Only) --- */
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+            top: 0;
+            left: 0;
+        }
+
+        /* --- RESPONSIVE LOGIC --- */
+        @@media (max-width: 992px) {
             #sidebar {
-                margin-left: -260px;
+                position: fixed;
+                height: 100vh;
+                margin-left: calc(-1 * var(--sidebar-width));
             }
 
-                #sidebar.active {
+                #sidebar.show {
                     margin-left: 0;
                 }
+
+            #sidebar-overlay.show {
+                display: block;
+            }
+
+            #content {
+                margin-left: 0 !important;
+            }
         }
+
+        /* Utility */
+        .btn-toggle {
+            padding: 0.5rem;
+            border-radius: 6px;
+            background: #f3f4f6;
+            border: none;
+            color: #374151;
+        }
+
+            .btn-toggle:hover {
+                background: #e5e7eb;
+            }
     </style>
 </head>
+
 <body>
+    <div id="sidebar-overlay"></div>
 
     <div id="wrapper">
+
         <nav id="sidebar">
-            <div class="sidebar-header text-center">
-                <h4 class="text-primary fw-bold mb-0">SMART</h4>
-                <span class="text-white-50 small text-uppercase">Warehouse System</span>
+            <div class="sidebar-header">
+                <h4 class="mb-0 fw-bold text-white">SMART</h4>
+                <p class="small mb-0 opacity-50 uppercase tracking-wider">Warehouse Management</p>
             </div>
 
-            <ul class="list-unstyled components flex-grow-1">
-                <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "bg-dark" : "")">
-                    <a asp-controller="Home" asp-action="Index">
-                        <i class="bi bi-speedometer2 text-primary"></i> Dashboard
+            <ul class="list-unstyled flex-grow-1">
+                <li>
+                    <a class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active-menu" : "")"
+                       asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
                 </li>
-                <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" ? "bg-dark" : "")">
-                    <a asp-controller="Product" asp-action="Index">
-                        <i class="bi bi-box-seam text-warning"></i> Inventory
+
+                <li>
+                    <a class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Product" ? "active-menu" : "")"
+                       asp-controller="Product" asp-action="Index">
+                        <i class="bi bi-box-seam"></i> Inventory
                     </a>
                 </li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li>
+                        <a class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Settings" ? "active-menu" : "")"
+                           asp-controller="Settings" asp-action="Index">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                    </li>
+                }   
 
                 @if (User.IsInRole("Admin"))
                 {
-                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" ? "bg-dark" : "")">
-                        <a asp-controller="User" asp-action="Index">
-                            <i class="bi bi-people text-info"></i> User Management
+                    <div class="px-4 py-2 small text-uppercase opacity-25 fw-bold" style="font-size: 0.7rem;">Administrator</div>
+                    <li>
+                        <a class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" ? "active-menu" : "")"
+                           asp-controller="User" asp-action="Index">
+                            <i class="bi bi-people"></i> Users
                         </a>
                     </li>
-                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Settings" ? "bg-dark" : "")">
-                        <a asp-controller="Settings" asp-action="Index">
-                            <i class="bi bi-gear text-secondary"></i> Settings
+                    <li>
+                        <a class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Files" ? "active-menu" : "")"
+                           asp-controller="Files" asp-action="Index">
+                            <i class="bi bi-file-earmark"></i> Files
                         </a>
                     </li>
+                   
                 }
             </ul>
 
-            <div class="sidebar-footer p-3 border-top border-secondary">
+            <div class="p-3 border-top border-dark border-opacity-10">
                 <partial name="_LoginPartial" />
             </div>
         </nav>
 
         <div id="content">
-            <nav class="top-navbar">
-                <button type="button" id="sidebarCollapse" class="btn btn-dark shadow-none">
+
+            <nav class="top-navbar shadow-sm">
+                <button id="toggleSidebar" class="btn-toggle me-3">
                     <i class="bi bi-list fs-4"></i>
                 </button>
-                <div class="ms-4 h5 mb-0 text-dark fw-semibold">
-                    @ViewData["Title"]
+
+                <div class="fw-semibold text-dark">@ViewData["Title"]</div>
+
+                <div class="ms-auto small text-muted d-none d-sm-block">
+                    <i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dd MMM yyyy")
                 </div>
             </nav>
 
@@ -158,27 +236,43 @@
                     @RenderBody()
                 </main>
             </div>
+
         </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const btn = document.getElementById('sidebarCollapse');
-            const sidebar = document.getElementById('sidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const btnToggle = document.getElementById('toggleSidebar');
 
-            if(btn && sidebar) {
-                btn.addEventListener('click', function() {
-                    sidebar.classList.toggle('active');
-                });
+        // Fungsi Toggle
+        function toggleSidebar() {
+            const isMobile = window.innerWidth <= 992;
+
+            if (isMobile) {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        btnToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Reset state saat resize layar
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 992) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
             }
         });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

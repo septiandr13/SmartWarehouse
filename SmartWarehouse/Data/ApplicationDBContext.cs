@@ -7,6 +7,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<WarehouseBin> Bins { get; set; }
     public DbSet<StockMovement> StockMovements { get; set; }
     public DbSet<AppSetting> AppSettings { get; set; }
+    public DbSet<FileDocument> FileDocuments { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

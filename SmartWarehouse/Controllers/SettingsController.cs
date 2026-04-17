@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 public class SettingsController(ApplicationDbContext context) : Controller
 {
     public async Task<IActionResult> Index()

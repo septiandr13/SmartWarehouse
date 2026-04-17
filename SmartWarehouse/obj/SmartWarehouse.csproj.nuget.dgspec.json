@@ -102,6 +102,10 @@
               "target": "Package",
               "version": "[10.1.7, )"
             },
+            "dropzone": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
             "xunit.extensibility.core": {
               "target": "Package",
               "version": "[2.9.3, )"

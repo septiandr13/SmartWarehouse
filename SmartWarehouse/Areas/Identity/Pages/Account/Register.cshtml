@@ -1,80 +1,175 @@
 ﻿@page
 @model RegisterModel
+
 @{
-    ViewData["Title"] = "Daftar Akun Baru";
+    ViewData["Title"] = "Register";
 }
 
-<div class="login-container">
-    <div class="login-card">
-        <div class="login-brand">
-            <div class="brand-content">
-                <img src="https://illustrations.popsy.co/amber/resistance-is-futile.svg" alt="Welcome" class="brand-img" />
-                <h2>Gabung Sekarang! ✨</h2>
-                <p>Mulai petualanganmu bersama kami hanya dengan beberapa langkah mudah.</p>
+<style>
+    body {
+        background-color: #f4f6f9;
+    }
+
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+        .auth-header h3 {
+            font-weight: 600;
+        }
+
+    .form-control {
+        border-radius: 10px;
+    }
+
+    .btn-auth {
+        background: #4f46e5;
+        color: #fff;
+        border-radius: 10px;
+        padding: 12px;
+        font-weight: 600;
+    }
+
+        .btn-auth:hover {
+            background: #4338ca;
+        }
+
+    .divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+    }
+
+        .divider span {
+            background: #fff;
+            padding: 0 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: #ddd;
+            top: 50%;
+            left: 0;
+        }
+
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d;
+    }
+</style>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <h3>Buat Akun Baru ✨</h3>
+            <p class="text-muted small">Isi data di bawah untuk mulai menggunakan sistem</p>
+        </div>
+
+        <form id="registerForm" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- EMAIL -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" placeholder="Email" />
+                <label>Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger small"></span>
             </div>
-        </div>
 
-        <div class="login-form-section">
-            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                <div class="form-header">
-                    <h3>Register</h3>
-                    <p class="text-muted">Buat akun barumu di sini</p>
-                </div>
+            <!-- PASSWORD -->
+            <div class="form-floating mb-3 position-relative">
+                <input asp-for="Input.Password" id="password" class="form-control" placeholder="Password" />
+                <label>Password</label>
+                <i class="bi bi-eye toggle-password" onclick="togglePassword('password')"></i>
+                <span asp-validation-for="Input.Password" class="text-danger small"></span>
+            </div>
 
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+            <!-- CONFIRM PASSWORD -->
+            <div class="form-floating mb-4 position-relative">
+                <input asp-for="Input.ConfirmPassword" id="confirmPassword" class="form-control" placeholder="Confirm Password" />
+                <label>Konfirmasi Password</label>
+                <i class="bi bi-eye toggle-password" onclick="togglePassword('confirmPassword')"></i>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+            </div>
 
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control custom-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger small"></span>
-                </div>
+            <!-- BUTTON -->
+            <button type="submit" class="btn btn-auth w-100 mb-3" id="registerBtn">
+                Daftar
+            </button>
 
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control custom-input" autocomplete="new-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
-                </div>
+            <div class="divider"><span>atau</span></div>
 
-                <div class="form-floating mb-4">
-                    <input asp-for="Input.ConfirmPassword" class="form-control custom-input" autocomplete="new-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.ConfirmPassword">Konfirmasi Password</label>
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
-                </div>
-
-                <button id="registerSubmit" type="submit" class="btn btn-login w-100 mb-3">Daftar Akun</button>
-
-                <div class="divider">
-                    <span>atau daftar dengan</span>
-                </div>
-
-                <div class="external-logins mb-4">
-                    @{
-                        if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                        {
-                            <p class="text-muted small text-center">Belum ada layanan eksternal tersedia.</p>
-                        }
-                        else
-                        {
-                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-outline-secondary w-100 mb-2" name="provider" value="@provider.Name">
-                                        Daftar via @provider.DisplayName
-                                    </button>
-                                }
-                            </form>
-                        }
+            <!-- EXTERNAL LOGIN -->
+            @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                <form asp-page="./ExternalLogin" method="post">
+                    @foreach (var provider in Model.ExternalLogins!)
+                    {
+                        <button class="btn btn-outline-secondary w-100 mb-2"
+                                name="provider" value="@provider.Name">
+                            Daftar dengan @provider.DisplayName
+                        </button>
                     }
-                </div>
+                </form>
+            }
+            else
+            {
+                <p class="text-muted small text-center">Tidak ada layanan eksternal</p>
+            }
 
-                <p class="text-center mb-0">
-                    Sudah punya akun? <a asp-page="./Login" class="register-link">Masuk di sini</a>
-                </p>
-            </form>
-        </div>
+            <p class="text-center mt-3 small">
+                Sudah punya akun?
+                <a asp-page="./Login">Login</a>
+            </p>
+
+        </form>
+
     </div>
+
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+
+        document.getElementById("registerForm").addEventListener("submit", function () {
+            const btn = document.getElementById("registerBtn");
+            btn.innerHTML = "Loading...";
+            btn.disabled = true;
+        });
+    </script>
 }

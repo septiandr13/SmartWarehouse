@@ -1,7 +1,3 @@
-Berikut versi yang sudah dirapikan, profesional, dan siap langsung kamu pakai untuk dokumentasi GitHub (README.md):
-
----
-
 # 📦 SmartWarehouse System
 
 **SmartWarehouse** adalah aplikasi **Warehouse Management System (WMS)** profesional berbasis **ASP.NET Core MVC** yang dirancang dengan arsitektur scalable, aman, dan mendukung integrasi perangkat seperti **Barcode Scanner**.
@@ -145,7 +141,14 @@ Update-Database
 | Swagger tidak muncul                      | Pastikan konfigurasi Swagger dilakukan sebelum `builder.Build()` di `Program.cs`                     |
 
 ---
+## Test System
 
+You can access the test system using the following link:
+
+- **Link**: [http://smart-warehouse.somee.com/](http://smart-warehouse.somee.com/)
+- **Username**: admin@warehouse.com
+- **Password**: Admin123!
+- 
 ## 📌 Catatan Tambahan
 
 * Pastikan environment development sudah sesuai sebelum menjalankan aplikasi

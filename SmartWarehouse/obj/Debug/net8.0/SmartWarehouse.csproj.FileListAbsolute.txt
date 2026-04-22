@@ -17,6 +17,11 @@ D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\SmartWarehouse.xml
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Azure.Core.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Azure.Identity.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\ClosedXML.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\ClosedXML.Parser.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\ExcelNumberFormat.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Humanizer.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\MailKit.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
@@ -44,14 +49,7 @@ D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.EntityFram
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Extensions.ObjectPool.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Identity.Client.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
@@ -83,7 +81,9 @@ D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\NuGet.Packaging.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\NuGet.ProjectModel.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\NuGet.Protocol.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\NuGet.Versioning.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\RBush.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Rotativa.AspNetCore.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\SixLabors.Fonts.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -96,8 +96,8 @@ D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.Composition.T
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.Drawing.Common.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.IO.Packaging.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.Memory.Data.dll
-D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.Net.WebSockets.WebSocketProtocol.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.Reflection.MetadataLoadContext.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.Runtime.Caching.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
@@ -276,7 +276,6 @@ D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.buil
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.build.json.cache
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.development.json
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWar.1C7FC1F0.Up2Date
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWarehouse.dll
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\refint\SmartWarehouse.dll
@@ -284,3 +283,4 @@ D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWarehouse.xml
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWarehouse.pdb
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\SmartWarehouse.genruntimeconfig.cache
 D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\ref\SmartWarehouse.dll
+D:\Septiandr\SmartWarehouse\SmartWarehouse\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

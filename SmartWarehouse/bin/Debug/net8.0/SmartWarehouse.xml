@@ -124,53 +124,5 @@
         <member name="M:SmartWarehouse.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:SmartWarehouse.Migrations.AddIdentityTables">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddIdentityTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddIdentityTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddIdentityTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:SmartWarehouse.Migrations.AddStockMovevment">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddStockMovevment.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddStockMovevment.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddStockMovevment.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:SmartWarehouse.Migrations.AddAppSettingTable">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddAppSettingTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddAppSettingTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddAppSettingTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:SmartWarehouse.Migrations.AddFileDocument">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddFileDocument.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddFileDocument.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:SmartWarehouse.Migrations.AddFileDocument.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
     </members>
 </doc>

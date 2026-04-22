@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. REGISTRASI SERVICES (Pendaftaran)
 // ==========================================
 
+// ✅ GUNAKAN INI (bukan AddControllersWithViews, karena ini mencakup Controllers + Views)
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
@@ -18,9 +19,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity Configuration 
-// Cukup gunakan AddIdentity (Hapus AddDefaultIdentity karena menyebabkan konflik)
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
-    options.SignIn.RequireConfirmedAccount = false; // Set false agar fitur lupa password & login langsung aktif
+    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = true;
@@ -28,7 +28,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
     options.Password.RequireLowercase = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders() // WAJIB untuk fitur Lupa Password (Token Generator)
+.AddDefaultTokenProviders()
 .AddDefaultUI();
 
 // Cookie & Access Configuration
@@ -42,6 +42,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IEmailSender, IdentityEmailSender>();
 
+// API Explorer & Swagger (untuk dokumentasi & testing API)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // ==========================================
@@ -51,7 +55,13 @@ var app = builder.Build();
 IWebHostEnvironment env = app.Environment;
 RotativaConfiguration.Setup(env.WebRootPath, "Rotativa");
 
-if (!app.Environment.IsDevelopment())
+// Swagger hanya di Development
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
@@ -76,7 +86,6 @@ using (var scope = app.Services.CreateScope())
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
 
-        // Buat Roles jika belum ada
         string[] roleNames = { "Admin", "Operator" };
         foreach (var roleName in roleNames)
         {
@@ -86,7 +95,6 @@ using (var scope = app.Services.CreateScope())
             }
         }
 
-        // Buat User Admin Default
         string adminEmail = "admin@warehouse.com";
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
@@ -115,7 +123,14 @@ using (var scope = app.Services.CreateScope())
 // ==========================================
 // 4. MAPPING ROUTES
 // ==========================================
+
+// ✅ TAMBAH INI: Untuk API controller dengan [HttpGet], [HttpPost], dll
+app.MapControllers();
+
+// Untuk Razor Pages
 app.MapRazorPages();
+
+// Untuk MVC controller dengan routing tradisional (Home, Product, dll)
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

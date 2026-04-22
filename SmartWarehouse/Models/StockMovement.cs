@@ -2,8 +2,8 @@
 {
     public class StockMovement
     {
-        public int Id { get; set; }
-        public int ProductId { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid ProductId { get; set; }
         public Product? Product { get; set; }
         public int QuantityChanged { get; set; } // Bisa positif (masuk) atau negatif (keluar)
         public string Type { get; set; } = "Inbound"; // Inbound, Outbound, Adjustment

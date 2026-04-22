@@ -43,6 +43,11 @@ namespace SmartWarehouse.Controllers
                 };
                 context.StockMovements.Add(movement);
                 await context.SaveChangesAsync();
+                //send email new product
+                string subject = $"ADA STOCK BARU MASUK NIH: {product.Name}";
+                string message = $@"<h3>Segera infokan ke tim yang lain!</h3>
+                                        <p>Barang <b>{product.Name}</b> (SKU: {product.SKU}) Stock baru masuk <b>{product.StockQuantity}</b> unit.</p>";
+                await emailService.SendEmailAsync("yayansky65@gmail.com", subject, message);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -50,7 +55,7 @@ namespace SmartWarehouse.Controllers
         }
 
         // 4. Form Edit Barang (GET)
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null) return NotFound();
             var product = await context.Products.FindAsync(id);
@@ -62,7 +67,7 @@ namespace SmartWarehouse.Controllers
         [HttpPost]
         [Authorize(Roles ="Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Product product)
+        public async Task<IActionResult> Edit(Guid id, Product product)
         {
             if (id != product.Id) return NotFound();
 
@@ -73,6 +78,7 @@ namespace SmartWarehouse.Controllers
                     context.Update(product);
                     await context.SaveChangesAsync();
 
+                   
                     // Cek Stok Rendah untuk Email Notifikasi
                     if (product.StockQuantity < 10)
                     {
@@ -96,7 +102,7 @@ namespace SmartWarehouse.Controllers
         // 6. Proses Hapus Barang (POST)
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var product = await context.Products.FindAsync(id);
             if (product != null)
